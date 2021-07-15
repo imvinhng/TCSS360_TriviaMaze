@@ -1,0 +1,2 @@
+This is a testing text from the local machine
+You could use this to write dowm notes for the project

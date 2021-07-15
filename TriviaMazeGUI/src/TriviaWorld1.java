@@ -3,6 +3,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * A simple layout for starters.
+ *
+ * @vnguye3
+ */
 public class TriviaWorld1 {
         /**
          * Frame Size.

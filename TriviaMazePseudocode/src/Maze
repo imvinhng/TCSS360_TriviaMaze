@@ -4,7 +4,7 @@ Maze
     Integer myColumns
     Player myPlayer
     Rooms2DArray myRooms
-    Map myDoors KEY -> id VALUE -> Door
+    Map myDoors KEY -> id, VALUE -> Door
 
     Maze Constructor PARAMETERS -> theDefinedRows, theDefinedColumns
         myRows = theDefinedRows + 2
@@ -51,4 +51,4 @@ Maze
         END FOR
 
     addPlayer Method
-        CALL myPlayer setPosition Method -> 1, 1
+        myPlayer = CALL Player Constructor PARAMETERS -> 1, 1

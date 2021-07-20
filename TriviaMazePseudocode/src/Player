@@ -1,0 +1,38 @@
+Player
+
+    Integer myXPosition
+    Integer myYPosition
+    Integer myAvailableHints
+
+    Player Constructor PARAMETERS -> Integer theInitialX, Integer theInitialY
+        CALL setPlayerPosition PARAMETERS -> theInitialX, TheInitialY
+        myAvailableHints = 3
+
+    movePlayerNorth Method
+        CALL setPlayerPosition PARAMETERS -> myXPosition, myYPosition + 1
+
+    movePlayerSouth Method
+        CALL setPlayerPosition PARAMETERS -> myXPosition, myYPosition - 1
+
+    movePlayerEast Method
+        CALL setPlayerPosition PARAMETERS -> myXPosition + 1, myYPosition
+
+    movePlayerWest Method
+        CALL setPlayerPosition PARAMETERS -> myXPosition -1, myYPosition
+
+    setPlayerPosition Method PARAMETERS -> Integer theXPosition, Integer theYPosition
+        myXPosition = theXPosition
+        myYPosition = theYPosition
+
+    getPlayerXPosition Method RETURN -> Integer
+        RETURN myXPosition
+
+    getPlayerYPosition Method RETURN -> Integer
+        RETURN myYPosition
+
+    useHint Method
+        IF myAvailableHints > 0 THEN
+            decrement myAvailableHints by 1
+
+    getAvailableHints RETURN -> Integer
+        RETURN myAvailableHints

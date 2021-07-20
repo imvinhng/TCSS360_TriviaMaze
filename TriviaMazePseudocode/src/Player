@@ -32,7 +32,7 @@ Player
 
     useHint Method
         IF myAvailableHints > 0 THEN
-            decrement myAvailableHints by 1
+           myAvailableHints = myAvailableHints - 1
 
     getAvailableHints RETURN -> Integer
         RETURN myAvailableHints

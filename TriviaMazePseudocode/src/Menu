@@ -1,0 +1,18 @@
+Menu
+
+    Integer myWidth
+    Integer myHeight
+
+    JFrame myMainFrame
+
+    JButton myStartTriviaMazeButton
+    JButton myHelpButton
+    JButton myAboutButton
+    JButton myExitButton
+
+    CardLayout myLayout
+
+    Menu Constructor
+        INITIALIZE frame
+        INITIALIZE buttons
+

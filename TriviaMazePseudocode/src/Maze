@@ -1,0 +1,54 @@
+Maze
+
+    Integer myRows
+    Integer myColumns
+    Player myPlayer
+    Rooms2DArray myRooms
+    Map myDoors KEY -> id VALUE -> Door
+
+    Maze Constructor PARAMETERS -> theDefinedRows, theDefinedColumns
+        myRows = theDefinedRows + 2
+        myColumns = theDefinedColumns + 2
+        CALL addRooms Method
+        CALL addDoors Method
+        CALL createWalls Method
+        CALL addPlayer Method
+
+    addRooms Method
+        FOR 1 to myRows - 1
+            FOR 1 to myColumns - 1
+                CALL addDoors Method at position -> myRows, myColumns
+            END FOR
+        END FOR
+
+    addDoors Method PARAMETERS -> Integer theRoomRowPosition, Integer theRoomColumnPosition
+        FOR Directions of Room
+            IF Room at location of Direction has Door at opposite Direction THEN
+                the Room shares a door with the the neighboring Room
+            ELSE
+                create new door at Direction
+        END FOR Directions of Room
+
+    createWalls Method
+        FOR column = 1 to myColumns - 1
+            Room at position row = 1, column SET NORTH Door to open = false
+            Room at position row = 1, column SET NORTH Door to visible = false
+        END FOR
+
+        FOR column = 1 to myColumns - 1
+            Room at position row = myRows - 1, column SET SOUTH Door to open = false
+            Room at position row = myRows - 1, column SET SOUTH Door to visible = false
+        END FOR
+
+        FOR row = 1 to myRows - 1
+            Room at position row, column = 1 SET WEST Door to locked
+            Room at position row, column = 1 SET WEST Door to notVisible
+        END FOR
+
+        FOR row = 1 to myRows - 1
+            Room at position row, column = myColumns - 1 SET EAST Door to locked
+            Room at position row, column = myColumns - 1 SET EAST Door to notVisible
+        END FOR
+
+    addPlayer Method
+        CALL myPlayer setPosition Method -> 1, 1

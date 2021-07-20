@@ -1,0 +1,11 @@
+TriviaMaze
+
+    Menu myMenu
+    Maze myMaze
+
+    TriviaMaze Constructor
+        nothing
+
+    Main
+        myMaze = CALL Maze Constructor -> Integer rows, Integer columns
+        myMenu = CALL Menu Constructor

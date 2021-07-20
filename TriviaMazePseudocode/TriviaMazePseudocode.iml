@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$USER_HOME$/OneDrive - UW/Summer 2021/TCSS 360 A - Software Development and Quality Assurance Techniques/TCSS360_TriviaMaze/TriviaMazePseudocode">
+      <sourceFolder url="file://$USER_HOME$/OneDrive - UW/Summer 2021/TCSS 360 A - Software Development and Quality Assurance Techniques/TCSS360_TriviaMaze/TriviaMazePseudocode/src" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

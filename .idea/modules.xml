@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/TCSS360_TriviaMaze.iml" filepath="$PROJECT_DIR$/.idea/TCSS360_TriviaMaze.iml" />
       <module fileurl="file://$PROJECT_DIR$/TriviaMazeGUI/TriviaMazeGUI.iml" filepath="$PROJECT_DIR$/TriviaMazeGUI/TriviaMazeGUI.iml" />
       <module fileurl="file://$PROJECT_DIR$/TriviaMazeGame/TriviaMazeGame.iml" filepath="$PROJECT_DIR$/TriviaMazeGame/TriviaMazeGame.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TriviaMazeGame/tests.iml" filepath="$PROJECT_DIR$/TriviaMazeGame/tests.iml" />
     </modules>
   </component>
 </project>

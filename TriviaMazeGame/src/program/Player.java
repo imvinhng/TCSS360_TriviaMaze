@@ -1,4 +1,11 @@
-public class Player {
+package program;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+public class Player implements KeyListener {
 
     Integer myXPosition;
     Integer myYPosition;
@@ -46,5 +53,33 @@ public class Player {
 
     public Integer getAvailableHints() {
         return myAvailableHints;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            movePlayerNorth();
+        }
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            movePlayerSouth();
+        }
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            movePlayerWest();
+        }
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            movePlayerEast();
+        }
+
+        System.out.println("X pos: " + myXPosition + ", Y pos: " + myYPosition);
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }

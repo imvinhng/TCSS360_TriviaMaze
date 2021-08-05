@@ -43,12 +43,12 @@ public class TriviaWorld1 extends Application {
         Canvas canvas = new Canvas(GAME_SIZE.width, GAME_SIZE.height);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        //JavaFX Timeline = free form animation defined by KeyFrames and their duration
-        Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc)));
-        //number of cycles in animation INDEFINITE = repeat indefinitely
-        tl.setCycleCount(Timeline.INDEFINITE);
+            //JavaFX Timeline = free form animation defined by KeyFrames and their duration
+            Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc)));
+            //number of cycles in animation INDEFINITE = repeat indefinitely
+            tl.setCycleCount(Timeline.INDEFINITE);
 
-        //mouse control (move and click)
+            //mouse control (move and click)
 //        canvas.setOnMouseMoved(e -> {
 //            playerOneXPos  = e.getX();
 //            playerOneYPos = e.getY();
@@ -56,32 +56,75 @@ public class TriviaWorld1 extends Application {
 
 //        canvas.setOnMouseClicked(e ->  gameStarted = true);
 
-        Scene basicScene = new Scene(new StackPane(canvas));
-        stage.setScene(basicScene);
-        stage.show();
-        tl.play();
+            Scene basicScene = new Scene(new StackPane(canvas));
+            stage.setScene(basicScene);
+            stage.show();
+            tl.play();
 
-        //keyboard control
-        basicScene.setOnKeyPressed(e -> {
+
+            //keyboard control
+            basicScene.setOnKeyPressed(e -> {
 //            System.out.println("Key was pressed " + e.getCode() + " \n" + e);
 
-            inGame = true;
-            currentKey = e.getCode().toString();
+                inGame = true;
+                currentKey = e.getCode().toString();
 
-            if ((e.getCode() == KeyCode.W || e.getCode() == KeyCode.UP) && (playerYPos - playerVelocity) >= 0) {
-                playerYPos -= playerVelocity;
-            }
-            if ((e.getCode() == KeyCode.S || e.getCode() == KeyCode.DOWN)  && (playerYPos + playerVelocity) <= GAME_SIZE.height) {
-                playerYPos += playerVelocity;
-            }
-            if ((e.getCode() == KeyCode.A || e.getCode() == KeyCode.LEFT) && (playerXPos - playerVelocity) >= 0) {
-                playerXPos -= playerVelocity;
-            }
-            if ((e.getCode() == KeyCode.D || e.getCode() == KeyCode.RIGHT) && (playerXPos + playerVelocity) <= GAME_SIZE.width) {
-                playerXPos += playerVelocity;
-            }
+                if ((e.getCode() == KeyCode.W || e.getCode() == KeyCode.UP) && (playerYPos - playerVelocity) >= 0) {
+                    if (playerXPos == 200 && (playerYPos - playerVelocity) == 350) {
+                        // do nothing
+                    } else if (playerXPos == 250 && (playerYPos - playerVelocity) == 350) {
+                        // do nothing
+                    } else if (playerXPos == 300 && (playerYPos - playerVelocity) == 350) {
+                        // do nothing
+                    } else {
+                        playerYPos -= playerVelocity;
+                    }
+                }
+                if ((e.getCode() == KeyCode.S || e.getCode() == KeyCode.DOWN) && (playerYPos + playerVelocity) <= GAME_SIZE.height) {
+                    if (playerXPos == 200 && (playerYPos + playerVelocity) == 200) {
+                        // do nothing
+                    } else if (playerXPos == 200 && (playerYPos + playerVelocity) == 350) {
+                        // do nothing
+                    } else if (playerXPos == 250 && (playerYPos + playerVelocity) == 350) {
+                        // do nothing
+                    } else if (playerXPos == 300 && (playerYPos + playerVelocity) == 350) {
+                        // do nothing
+                    }else {
+                        playerYPos += playerVelocity;
+                    }
+                }
+                if ((e.getCode() == KeyCode.A || e.getCode() == KeyCode.LEFT) && (playerXPos - playerVelocity) >= 0) {
+                    // obstacle collision
+                    if ( (playerXPos - playerVelocity) == 200 && playerYPos == 200) {
+                        // do nothing
+                    } else if ( (playerXPos - playerVelocity) == 200 && playerYPos == 250) {
+                        // do nothing
+                    } else if ( (playerXPos - playerVelocity) == 200 && playerYPos == 300) {
+                        // do nothing
+                    } else if ( (playerXPos - playerVelocity) == 300 && playerYPos == 350) {
+                        // do nothing
+                    }  else {
+                        playerXPos -= playerVelocity;
+                    }
+                }
+                if ((e.getCode() == KeyCode.D || e.getCode() == KeyCode.RIGHT) && (playerXPos + playerVelocity) <= GAME_SIZE.width) {
+                    if ( (playerXPos + playerVelocity) == 200 && playerYPos == 200) {
+                        // do nothing
+                    } else if ( (playerXPos + playerVelocity) == 200 && playerYPos == 250) {
+                        // do nothing
+                    } else if ( (playerXPos + playerVelocity) == 200 && playerYPos == 300) {
+                        // do nothing
+                    } else if ( (playerXPos + playerVelocity) == 200 && playerYPos == 350) {
+                        // do nothing
+                    }  else {
+                        playerXPos += playerVelocity;
+                    }
 
-        });
+                }
+
+
+            });
+
     }
 
     public void run(GraphicsContext gc) {
@@ -89,6 +132,9 @@ public class TriviaWorld1 extends Application {
         //set background color
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, GAME_SIZE.width, GAME_SIZE.height);
+
+        // draw Title
+        drawTitle(gc);
 
         //set text
         gc.setFill(Color.WHITE);
@@ -104,7 +150,8 @@ public class TriviaWorld1 extends Application {
             }
 
             drawPlayer(gc);
-            drawScore(gc);
+//            drawScore(gc);
+            drawObstacle(gc, "L");
 
             // test for end state
             if (playerXPos == GAME_SIZE.width - PLAYER_SIDE && playerYPos == GAME_SIZE.height - PLAYER_SIDE) {
@@ -115,10 +162,9 @@ public class TriviaWorld1 extends Application {
 
 
 
+
         } else {
             //set the start text
-            gc.setFill(Color.WHITE);
-            gc.fillText("TriviaWorld1", GAME_SIZE.width/2, GAME_SIZE.height/3);
 
             gc.setFill(Color.BLUEVIOLET);
             gc.setFont (new Font ("TimesRoman", 20));
@@ -160,16 +206,44 @@ public class TriviaWorld1 extends Application {
         gc.fillRect(playerXPos, playerYPos, PLAYER_SIDE, PLAYER_SIDE);
     }
 
+    private void drawTitle(GraphicsContext gc) {
+        gc.setFill(Color.WHITE);
+        gc.fillText("TriviaWorld1", GAME_SIZE.width/2, GAME_SIZE.height/3);
+    }
     /**
      * Utility method to draw score (if needed).
      * @param gc
      */
     private void drawScore(GraphicsContext gc) {
         gc.setFill(Color.WHITE);
-        gc.fillText("TriviaWorld1", GAME_SIZE.width/2, GAME_SIZE.height/3);
         gc.setFill(Color.CORAL);
         gc.fillText(currentKey, GAME_SIZE.width/2, GAME_SIZE.height/2 + 50);
 
+    }
+
+    /**
+     * Draw some bassic-shape obstacles.
+     * @param theShapeName string
+     * @param gc
+     */
+    private void drawObstacle(GraphicsContext gc, String theShapeName) {
+        gc.setFill(Color.DARKORANGE);
+        if (theShapeName.equals("L")) {
+            gc.fillRect(200, 200, 50, 200);
+            gc.fillRect(250, 350, 100, 50);
+        }
+        if (theShapeName.equals("T")) {
+
+        }
+        if (theShapeName.equals("C")) {
+
+        }
+        if (theShapeName.equals("U")) {
+
+        }
+        if (theShapeName.equals("N")) {
+
+        }
     }
 
     // start the application

@@ -1,6 +1,5 @@
 package program;
 
-import Interface.QuestionInterface;
 
 public class Question implements QuestionInterface {
 

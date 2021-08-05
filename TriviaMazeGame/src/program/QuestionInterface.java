@@ -1,4 +1,4 @@
-package Interface;
+package program;
 
 public interface QuestionInterface {
     String text = "";

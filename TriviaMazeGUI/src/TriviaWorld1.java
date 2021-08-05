@@ -1,123 +1,181 @@
-import javax.swing.*;
+package sample;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Random;
 
-/**
- * A simple layout for starters.
- *
- * @vnguye3
- */
-public class TriviaWorld1 {
-        /**
-         * Frame Size.
-         */
-        final int FRAME_SIZE = 400;
+import static javafx.application.Application.launch;
 
-        /**
-         * set up.
-         */
-        private void start() {
+public class TriviaWorld1 extends Application {
+    private final Dimension GAME_SIZE = new Dimension(800, 600);
+    private final double playerVelocity = 50;
+    private boolean inGame = false;
+    private boolean endReach = false;
+    private String currentKey = "";
 
-            final JFrame frame = new JFrame();
+    /** Player X Position.
+     * make sure to change this variable according to the control system
+     * for mouse based, we set this to 0 0, since the mouse dictate where the player is
+     * for keyboard based, we set this to the beginning of the maze (0,0)
+     */
+    private double playerXPos = 0.0;
+    private double playerYPos = 0.0;
 
+    private final int PLAYER_SIDE = 50;
 
-            // Label 1
-            final JLabel label1 = new JLabel("First Label");
-            label1.setBounds(60, 50, 280, 30);
-            label1.setText("Select/Enter the file containing unsorted integers:");
-            label1.setForeground(Color.BLUE);
-            frame.add(label1);
+    public void start(Stage stage) throws Exception {
+        stage.setTitle("Maze");
+        //background size
+        Canvas canvas = new Canvas(GAME_SIZE.width, GAME_SIZE.height);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
 
-            // Label 2
-            final JLabel folderLabel = new JLabel("Icon");
-            folderLabel.setBounds(320, 100, 30, 30);
-            folderLabel.setBackground(Color.black);
-            frame.add(folderLabel);
+        //JavaFX Timeline = free form animation defined by KeyFrames and their duration
+        Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc)));
+        //number of cycles in animation INDEFINITE = repeat indefinitely
+        tl.setCycleCount(Timeline.INDEFINITE);
 
-            // TextField 1
-            final JTextField textfield1 = new JTextField("");
-            textfield1.setBounds(100, 100, 200, 30);
-            frame.add(textfield1);
+        //mouse control (move and click)
+//        canvas.setOnMouseMoved(e -> {
+//            playerOneXPos  = e.getX();
+//            playerOneYPos = e.getY();
+//        });
 
-            // Label 2
-            final JLabel label2 = new JLabel("Binary Representation");
-            label2.setBounds(150, 250, 200, 30);
-            label2.setText("");
-            label2.setForeground(Color.BLUE);
-            frame.add(label2);
+//        canvas.setOnMouseClicked(e ->  gameStarted = true);
 
-            // Button1
-            final JButton button1 = new JButton("CONVERT");
-            button1.setBounds(140, 170, 100, 50);
-            button1.addActionListener(new ActionListener() {
+        Scene basicScene = new Scene(new StackPane(canvas));
+        stage.setScene(basicScene);
+        stage.show();
+        tl.play();
 
-                @Override
-                public void actionPerformed(final ActionEvent theEvent) {
-                    checkAndMessage(textfield1, label2, frame);
+        //keyboard control
+        basicScene.setOnKeyPressed(e -> {
+//            System.out.println("Key was pressed " + e.getCode() + " \n" + e);
 
+            inGame = true;
+            currentKey = e.getCode().toString();
 
-                }
-
-            });
-            frame.add(button1);
-
-
-
-            // make sure you put setLocationRelativeTo last to center JFrame
-            frame.setSize(FRAME_SIZE, FRAME_SIZE);
-            frame.setTitle("Decimal To Binary");
-            frame.setLayout(null);
-            frame.setVisible(true);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-            frame.setLocationRelativeTo(null);
-        }
-
-        /**
-         * Check if the input is valid, and respond accordingly.
-         *
-         * @param theText
-         * @param theLabel
-         * @param theFrame
-         */
-        private static void checkAndMessage (final JTextField theText, final JLabel theLabel, final JFrame theFrame) {
-            final String s = theText.getText();
-            try {
-                // check if the input is an integer
-                final int value = Integer.parseInt(s);
-
-                try {
-                    // check if the input is an integer <= 0
-                    final String binary = "I am here";
-
-                    // set the label text to binary result
-                    theLabel.setText(binary);
-                } catch (final IllegalArgumentException ex) {
-                    JOptionPane.showMessageDialog(theFrame,
-                            "The value must be positive. Please try again.");
-                }
-            } catch (final IllegalArgumentException ex) {
-                JOptionPane.showMessageDialog(theFrame,
-                        "Not an integer; try again.",
-                        "ERROR", JOptionPane.WARNING_MESSAGE);
+            if ((e.getCode() == KeyCode.W || e.getCode() == KeyCode.UP) && (playerYPos - playerVelocity) >= 0) {
+                playerYPos -= playerVelocity;
             }
+            if ((e.getCode() == KeyCode.S || e.getCode() == KeyCode.DOWN)  && (playerYPos + playerVelocity) <= GAME_SIZE.height) {
+                playerYPos += playerVelocity;
+            }
+            if ((e.getCode() == KeyCode.A || e.getCode() == KeyCode.LEFT) && (playerXPos - playerVelocity) >= 0) {
+                playerXPos -= playerVelocity;
+            }
+            if ((e.getCode() == KeyCode.D || e.getCode() == KeyCode.RIGHT) && (playerXPos + playerVelocity) <= GAME_SIZE.width) {
+                playerXPos += playerVelocity;
+            }
+
+        });
+    }
+
+    public void run(GraphicsContext gc) {
+        //set graphics
+        //set background color
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, GAME_SIZE.width, GAME_SIZE.height);
+
+        //set text
+        gc.setFill(Color.WHITE);
+        gc.setFont(Font.font(25));
+
+        if(inGame &&!endReach) {
+
+            if (playerXPos >= GAME_SIZE.width - PLAYER_SIDE) {
+                playerXPos = GAME_SIZE.width - PLAYER_SIDE;
+            }
+            if (playerYPos >= GAME_SIZE.height - PLAYER_SIDE) {
+                playerYPos = GAME_SIZE.height - PLAYER_SIDE;
+            }
+
+            drawPlayer(gc);
+            drawScore(gc);
+
+            // test for end state
+            if (playerXPos == GAME_SIZE.width - PLAYER_SIDE && playerYPos == GAME_SIZE.height - PLAYER_SIDE) {
+                inGame = false;
+                drawEndingScreen(gc, true);
+                System.out.println("Ending screen was drawn");
+            }
+
+
+
+        } else {
+            //set the start text
+            gc.setFill(Color.WHITE);
+            gc.fillText("TriviaWorld1", GAME_SIZE.width/2, GAME_SIZE.height/3);
+
+            gc.setFill(Color.BLUEVIOLET);
+            gc.setFont (new Font ("TimesRoman", 20));
+            gc.setTextAlign(TextAlignment.CENTER);
+            gc.fillText("Press any key to start game", GAME_SIZE.width / 2, 2 * GAME_SIZE.height / 3);
+
         }
 
-        /**
-         * Main method.
-         *
-         * @param theArgs arguments.
-         */
-        public static void main(final String[] theArgs) {
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
 
-                    new TriviaWorld1().start();
 
-                }
-            });
+
+    }
+
+
+    /**
+     * Utility method to draw player (if needed).
+     * @param gc
+     */
+    private void drawEndingScreen(GraphicsContext gc, boolean endReach) {
+        if (endReach) {
+            System.out.println("I'm here");
+            gc.setFill(Color.WHITE);
+            gc.fillText("Maze solved. Congratulations!", GAME_SIZE.width/2, GAME_SIZE.height/2);
+        } else {
+            System.out.println("You failed");
+            gc.setFill(Color.WHITE);
+            gc.fillText("Maze locked. Try again?", GAME_SIZE.width/2, GAME_SIZE.height/2);
         }
+    }
+
+
+
+    /**
+     * Utility method to draw player (if needed).
+     * @param gc
+     */
+    private void drawPlayer(GraphicsContext gc) {
+        gc.setFill(Color.WHITE);
+        gc.fillRect(playerXPos, playerYPos, PLAYER_SIDE, PLAYER_SIDE);
+    }
+
+    /**
+     * Utility method to draw score (if needed).
+     * @param gc
+     */
+    private void drawScore(GraphicsContext gc) {
+        gc.setFill(Color.WHITE);
+        gc.fillText("TriviaWorld1", GAME_SIZE.width/2, GAME_SIZE.height/3);
+        gc.setFill(Color.CORAL);
+        gc.fillText(currentKey, GAME_SIZE.width/2, GAME_SIZE.height/2 + 50);
+
+    }
+
+    // start the application
+    public static void main(String[] args) {
+        launch(args);
+    }
+
 
 }

@@ -6,16 +6,18 @@ import javafx.scene.paint.Color;
 public class Room extends ShapeSuper {
     GraphicsContext myGraphicContext;
     Color myColor = Color.BEIGE;
-    private int roomWidth;
-    private int roomHeight;
-    private int borderWidth;
+    private int myRoomWidth = 150;
+    private int myRoomHeight = 150;
+    private int startX;
+    private int startY;
 
-    public Room(GraphicsContext gc, Color color) {
+    public Room(GraphicsContext gc, Color color, int roomHeight, int roomWidth, int theStartX, int theStartY) {
         super(gc);
-        roomWidth = 150;
-        roomHeight = 150;
-        borderWidth = 10;
+        myRoomWidth = roomWidth;
+        myRoomHeight = roomHeight;
         myColor = color;
+        startX = theStartX;
+        startY = theStartY;
         myGraphicContext = gc;
 
     }
@@ -23,8 +25,8 @@ public class Room extends ShapeSuper {
     public void draw() {
 //        myGraphicContext.setFill(myColor);
         myGraphicContext.setStroke(myColor);
-//        myGraphicContext.strokeRect(0, 0, roomWidth + borderWidth, roomHeight + borderWidth );
-        myGraphicContext.strokeRect(0, 0, roomWidth, roomHeight);
+        myGraphicContext.strokeRect(startX, startY, myRoomWidth,myRoomHeight);
+//        myGraphicContext.strokeRect(startX, startY, myRoomWidth, myRoomHeight);
 
     }
 }

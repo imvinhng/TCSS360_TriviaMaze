@@ -21,6 +21,7 @@ import java.awt.*;
 
 public class TriviaWorld1 extends Application {
     private final Dimension GAME_SIZE = new Dimension(800, 600);
+    private final Dimension ROOM_SIZE = new Dimension(150, 150);
     private final double playerVelocity = 50;
     private final double ROOM_BORDER = 10;
     private boolean inGame = false;
@@ -28,7 +29,7 @@ public class TriviaWorld1 extends Application {
     private String currentKey = "";
     private Dimension L_startingPos = new Dimension(200,200);
     private LShape myLShape;
-    private Room demoRoom;
+    private Room demoRoom1, demoRoom2, demoRoom3;
 
     /** Player X Position.
      * make sure to change this variable according to the control system
@@ -277,8 +278,14 @@ public class TriviaWorld1 extends Application {
 
         }
         if (theShapeName.equals("ROOM")) {
-            demoRoom = new Room(gc, Color.CADETBLUE);
-            demoRoom.draw();
+            demoRoom1 = new Room(gc, Color.CADETBLUE, ROOM_SIZE.height, ROOM_SIZE.width, 0, 0);
+            demoRoom1.draw();
+
+            demoRoom2 = new Room(gc, Color.CADETBLUE, ROOM_SIZE.height, ROOM_SIZE.width, 150, 0);
+            demoRoom2.draw();
+
+            demoRoom3 = new Room(gc, Color.CADETBLUE, ROOM_SIZE.height, ROOM_SIZE.width, 0, 150);
+            demoRoom3.draw();
         }
     }
 

@@ -246,6 +246,7 @@ public class TriviaWorld1 extends Application {
         }
     }
 
+
     // start the application
     public static void main(String[] args) {
         launch(args);

@@ -1,6 +1,7 @@
 package com.example.tcss360_triviamaze.programs;
 
 import com.example.tcss360_triviamaze.structures.LShape;
+import com.example.tcss360_triviamaze.structures.Player;
 import com.example.tcss360_triviamaze.structures.Room;
 import com.example.tcss360_triviamaze.structures.ShapeSuper;
 import javafx.animation.KeyFrame;
@@ -20,24 +21,24 @@ import javafx.util.Duration;
 import java.awt.*;
 
 public class TriviaWorld1 extends Application {
-    private final Dimension GAME_SIZE = new Dimension(800, 600);
-    private final Dimension ROOM_SIZE = new Dimension(150, 150);
-    private final double playerVelocity = 50;
-    private final double ROOM_BORDER = 10;
+    private final Dimension GAME_SIZE = new Dimension(900, 600);
+    private final int ROOM_TOTAL = 24;
     private boolean inGame = false;
     private boolean endReach = false;
+    private Room[] myRooms = new Room[ROOM_TOTAL];
     private String currentKey = "";
     private Dimension L_startingPos = new Dimension(200,200);
     private LShape myLShape;
-    private Room demoRoom1, demoRoom2, demoRoom3;
+    private Player myPlayer;
+    private Room currentRoom;
 
     /** Player X Position.
      * make sure to change this variable according to the control system
      * for mouse based, we set this to 0 0, since the mouse dictate where the player is
      * for keyboard based, we set this to the beginning of the maze (0,0)
      */
-    private double playerXPos = 0.0;
-    private double playerYPos = 0.0;
+//    private double playerPos.x = 0.0;
+//    private double myPlayer.getYPos() = 0.0;
 
     private final int PLAYER_SIDE = 50;
 
@@ -46,6 +47,10 @@ public class TriviaWorld1 extends Application {
         //background size
         Canvas canvas = new Canvas(GAME_SIZE.width, GAME_SIZE.height);
         GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        // make sure to call this before run()
+        populateRoomArray(gc);
+        populatePlayer(gc);
 
         //JavaFX Timeline = free form animation defined by KeyFrames and their duration
         Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc)));
@@ -60,6 +65,7 @@ public class TriviaWorld1 extends Application {
 
 //        canvas.setOnMouseClicked(e ->  gameStarted = true);
 
+
         Scene basicScene = new Scene(new StackPane(canvas));
         stage.setScene(basicScene);
         stage.show();
@@ -73,29 +79,29 @@ public class TriviaWorld1 extends Application {
             inGame = true;
             currentKey = e.getCode().toString();
 
-            if ((e.getCode() == KeyCode.W || e.getCode() == KeyCode.UP) && (playerYPos - playerVelocity) >= 0) {
+            if ((e.getCode() == KeyCode.W || e.getCode() == KeyCode.UP) && (myPlayer.playerPos.y - myPlayer.getVelocity()) >= 0) {
 
                 if (!collision(myLShape, "UP")) {
-                    playerYPos -= playerVelocity;
+                    myPlayer.playerPos.y -= myPlayer.getVelocity();
                 }
             }
-            if ((e.getCode() == KeyCode.S || e.getCode() == KeyCode.DOWN) && (playerYPos + playerVelocity) <= GAME_SIZE.height) {
+            if ((e.getCode() == KeyCode.S || e.getCode() == KeyCode.DOWN) && (myPlayer.playerPos.y + myPlayer.getVelocity()) <= GAME_SIZE.height) {
 
                 if (!collision(myLShape, "DOWN")) {
-                    playerYPos += playerVelocity;
+                    myPlayer.playerPos.y += myPlayer.getVelocity();
                 }
             }
-            if ((e.getCode() == KeyCode.A || e.getCode() == KeyCode.LEFT) && (playerXPos - playerVelocity) >= 0) {
+            if ((e.getCode() == KeyCode.A || e.getCode() == KeyCode.LEFT) && (myPlayer.playerPos.x - myPlayer.getVelocity()) >= 0) {
                 // obstacle collision
 
                 if (!collision(myLShape, "LEFT")) {
-                    playerXPos -= playerVelocity;
+                    myPlayer.playerPos.x  -= myPlayer.getVelocity();
                 }
             }
-            if ((e.getCode() == KeyCode.D || e.getCode() == KeyCode.RIGHT) && (playerXPos + playerVelocity) <= GAME_SIZE.width) {
+            if ((e.getCode() == KeyCode.D || e.getCode() == KeyCode.RIGHT) && (myPlayer.playerPos.x + myPlayer.getVelocity()) <= GAME_SIZE.width) {
 
                 if (!collision(myLShape, "RIGHT")) {
-                    playerXPos += playerVelocity;
+                    myPlayer.playerPos.x  += myPlayer.getVelocity();
                 }
 
             }
@@ -106,52 +112,51 @@ public class TriviaWorld1 extends Application {
     }
 
     private boolean collision(ShapeSuper shape, String direction) {
-        boolean collide = true;
+        boolean collide = false;
+        final boolean PERMISSION_LEFT = false;
+        final boolean PERMISSION_RIGHT = true;
+        final boolean PERMISSION_UP = false;
+        final boolean PERMISSION_DOWN = true;
+        Point updatedPos;
 
         if (direction.equalsIgnoreCase("UP")) {
-            if (playerXPos == 200 && (playerYPos - playerVelocity) == 350
-                    || playerXPos == 250 && (playerYPos - playerVelocity) == 350
-                    || playerXPos == 300 && (playerYPos - playerVelocity) == 350) {
 
-                collide = true;
-
-            } else {
+            updatedPos = new Point(myPlayer.playerPos.x, myPlayer.playerPos.y - myPlayer.getVelocity());
+            if (updateCurrentRoom(updatedPos, PERMISSION_UP) && PERMISSION_UP) {
                 collide = false;
+            } else if (updateCurrentRoom(updatedPos, PERMISSION_UP) && !PERMISSION_UP) {
+                collide = true;
             }
+
 
         } else if (direction.equalsIgnoreCase("DOWN")) {
-            if (playerXPos == 200 && (playerYPos + playerVelocity) == 200
-                    || playerXPos == 200 && (playerYPos + playerVelocity) == 350
-                    || playerXPos == 250 && (playerYPos + playerVelocity) == 350
-                    || playerXPos == 300 && (playerYPos + playerVelocity) == 350) {
 
-                collide = true;
-
-            }else {
+            updatedPos = new Point(myPlayer.playerPos.x, myPlayer.playerPos.y + myPlayer.getVelocity());
+            if (updateCurrentRoom(updatedPos, PERMISSION_DOWN) && PERMISSION_DOWN) {
                 collide = false;
+            } else if (updateCurrentRoom(updatedPos, PERMISSION_DOWN) && !PERMISSION_DOWN) {
+                collide = true;
             }
+
+
         } else if (direction.equalsIgnoreCase("LEFT")) {
-            if ( (playerXPos - playerVelocity) == 200 && playerYPos == 200
-                    || (playerXPos - playerVelocity) == 200 && playerYPos == 250
-                    || (playerXPos - playerVelocity) == 200 && playerYPos == 300
-                    || (playerXPos - playerVelocity) == 300 && playerYPos == 350) {
 
-                collide = true;
-
-            }  else {
+            updatedPos = new Point(myPlayer.playerPos.x - myPlayer.getVelocity(), myPlayer.playerPos.y);
+            if (updateCurrentRoom(updatedPos, PERMISSION_LEFT) && PERMISSION_LEFT) {
                 collide = false;
+            } else if (updateCurrentRoom(updatedPos, PERMISSION_LEFT) && !PERMISSION_LEFT) {
+                collide = true;
             }
+
         } else if (direction.equalsIgnoreCase("RIGHT")) {
-            if ((playerXPos + playerVelocity) == 200 && playerYPos == 200
-                    || (playerXPos + playerVelocity) == 200 && playerYPos == 250
-                    || (playerXPos + playerVelocity) == 200 && playerYPos == 300
-                    || (playerXPos + playerVelocity) == 200 && playerYPos == 350) {
 
-                collide = true;
-
-            }  else {
+            updatedPos = new Point(myPlayer.playerPos.x + myPlayer.getVelocity(), myPlayer.playerPos.y);
+            if (updateCurrentRoom(updatedPos, PERMISSION_RIGHT) && PERMISSION_RIGHT) {
                 collide = false;
+            } else if (updateCurrentRoom(updatedPos, PERMISSION_RIGHT) && !PERMISSION_RIGHT) {
+                collide = true;
             }
+
         } else {
             collide = false;
         }
@@ -172,22 +177,24 @@ public class TriviaWorld1 extends Application {
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font(25));
 
+
         if(inGame &&!endReach) {
 
-            if (playerXPos >= GAME_SIZE.width - PLAYER_SIDE) {
-                playerXPos = GAME_SIZE.width - PLAYER_SIDE;
+            if (myPlayer.playerPos.x >= GAME_SIZE.width - PLAYER_SIDE) {
+                myPlayer.playerPos.x = GAME_SIZE.width - PLAYER_SIDE;
             }
-            if (playerYPos >= GAME_SIZE.height - PLAYER_SIDE) {
-                playerYPos = GAME_SIZE.height - PLAYER_SIDE;
+            if (myPlayer.playerPos.y >= GAME_SIZE.height - PLAYER_SIDE) {
+                myPlayer.playerPos.y = GAME_SIZE.height - PLAYER_SIDE;
             }
 
-            drawPlayer(gc);
+            myPlayer.drawPlayer();
 //            drawScore(gc);
-            drawObstacle(gc, "L");
-            drawObstacle(gc, "ROOM");
+//            drawObstacle(gc, "L");
+//            drawObstacle(gc, "ROOM");
+            drawRooms();
 
             // test for end state
-            if (playerXPos == GAME_SIZE.width - PLAYER_SIDE && playerYPos == GAME_SIZE.height - PLAYER_SIDE) {
+            if (myPlayer.playerPos.x == GAME_SIZE.width - PLAYER_SIDE && myPlayer.playerPos.y == GAME_SIZE.height - PLAYER_SIDE) {
                 inGame = false;
                 drawEndingScreen(gc, true);
                 System.out.println("Ending screen was drawn");
@@ -211,6 +218,24 @@ public class TriviaWorld1 extends Application {
 
     }
 
+    private boolean updateCurrentRoom(final Point theUpdatedPos, boolean permission) {
+        boolean update = false;
+
+        for (Room r : myRooms) {
+            if (r.containsPlayer(theUpdatedPos) && r != currentRoom) {
+                System.out.println("Player is trying to move from " + currentRoom.roomID + " to " + r.roomID);
+                update = true;
+                if (permission) {
+                    System.out.println("You shall pass!");
+                    currentRoom = r;
+                } else {
+                    System.out.println("You shall not pass!");
+                }
+            }
+        }
+
+        return update;
+    }
 
     /**
      * Utility method to draw player (if needed).
@@ -230,14 +255,7 @@ public class TriviaWorld1 extends Application {
 
 
 
-    /**
-     * Utility method to draw player (if needed).
-     * @param gc
-     */
-    private void drawPlayer(GraphicsContext gc) {
-        gc.setFill(Color.WHITE);
-        gc.fillRect(playerXPos, playerYPos, PLAYER_SIDE, PLAYER_SIDE);
-    }
+
 
     private void drawTitle(GraphicsContext gc) {
         gc.setFill(Color.WHITE);
@@ -252,6 +270,12 @@ public class TriviaWorld1 extends Application {
         gc.setFill(Color.CORAL);
         gc.fillText(currentKey, GAME_SIZE.width/2, GAME_SIZE.height/2 + 50);
 
+    }
+
+    private void drawRooms() {
+        for (Room r : myRooms) {
+            r.draw();
+        }
     }
 
     /**
@@ -277,16 +301,26 @@ public class TriviaWorld1 extends Application {
         if (theShapeName.equals("N")) {
 
         }
-        if (theShapeName.equals("ROOM")) {
-            demoRoom1 = new Room(gc, Color.CADETBLUE, ROOM_SIZE.height, ROOM_SIZE.width, 0, 0);
-            demoRoom1.draw();
+    }
 
-            demoRoom2 = new Room(gc, Color.CADETBLUE, ROOM_SIZE.height, ROOM_SIZE.width, 150, 0);
-            demoRoom2.draw();
-
-            demoRoom3 = new Room(gc, Color.CADETBLUE, ROOM_SIZE.height, ROOM_SIZE.width, 0, 150);
-            demoRoom3.draw();
+    private void populateRoomArray(GraphicsContext gc) {
+        int counter = 0;
+        for(int i = 0; i < GAME_SIZE.width; i+=150) {
+            for (int y = 0; y < GAME_SIZE.height; y+=150) {
+                myRooms[counter] = new Room(gc, Color.CADETBLUE, i, y);
+                myRooms[counter].roomID = counter;
+//                myRooms[counter].draw();
+                counter++;
+            }
         }
+
+        currentRoom = myRooms[0];
+
+    }
+
+    private void populatePlayer(GraphicsContext gc) {
+        myPlayer = new Player(gc, Color.WHITE, 0, 0);
+
     }
 
     // start the application

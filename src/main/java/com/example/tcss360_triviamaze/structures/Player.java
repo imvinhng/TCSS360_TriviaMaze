@@ -7,8 +7,8 @@ import java.awt.*;
 
 public class Player {
     private Color myColor;
-    public Point playerPos = new Point (0,0);
-    private Dimension PLAYER_SIZE = new Dimension(50, 50);
+    private Point playerPos = new Point (0,0);
+    public final Dimension PLAYER_SIZE = new Dimension(50, 50);
     private final int playerVelocity = 50;
     private GraphicsContext myGraphicContext;
 
@@ -27,8 +27,12 @@ public class Player {
         return PLAYER_SIZE;
     }
 
-    public int getXPos() {
+    public int getPlayerX() {
         return playerPos.x;
+    }
+
+    public int getPlayerY() {
+        return playerPos.y;
     }
 
     public Point getPos() {
@@ -39,8 +43,16 @@ public class Player {
         return playerVelocity;
     }
 
+    public void setPlayerX(int theNewX) {
+        playerPos.x = theNewX;
+    }
+
+    public void setPlayerY(int theNewY) {
+        playerPos.y = theNewY;
+    }
+
     /**
-     * Utility method to draw player (if needed).
+     * Utility method to draw player
      * @param
      */
     public void drawPlayer() {

@@ -50,8 +50,8 @@ public class Room extends ShapeSuper {
         int y_start = roomLocation.y;;
         int x_end = roomLocation.x + ROOM_SIZE.width;
         int y_end = roomLocation.y + ROOM_SIZE.height;
-        int playerXPos = player.playerPos.x;
-        int playerYPos = player.playerPos.y;
+        int playerXPos = player.getPlayerX();
+        int playerYPos = player.getPlayerY();
         int playerHeight = player.getPlayerSize().height;
         int playerWidth = player.getPlayerSize().width;
         boolean contains = false;

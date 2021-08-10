@@ -3,7 +3,6 @@ package com.example.tcss360_triviamaze.programs;
 import com.example.tcss360_triviamaze.structures.LShape;
 import com.example.tcss360_triviamaze.structures.Player;
 import com.example.tcss360_triviamaze.structures.Room;
-import com.example.tcss360_triviamaze.structures.ShapeSuper;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -30,17 +29,8 @@ public class TriviaWorld1 extends Application {
     private Dimension L_startingPos = new Dimension(200,200);
     private LShape myLShape;
     private Player myPlayer;
-    private Room currentRoom;
+    private Room myCurrentRoom, myStartRoom, myEndRoom;
 
-    /** Player X Position.
-     * make sure to change this variable according to the control system
-     * for mouse based, we set this to 0 0, since the mouse dictate where the player is
-     * for keyboard based, we set this to the beginning of the maze (0,0)
-     */
-//    private double playerPos.x = 0.0;
-//    private double myPlayer.getYPos() = 0.0;
-
-    private final int PLAYER_SIDE = 50;
 
     public void start(Stage stage) throws Exception {
         stage.setTitle("Maze");
@@ -78,50 +68,53 @@ public class TriviaWorld1 extends Application {
 
             inGame = true;
             currentKey = e.getCode().toString();
+            int playerY = myPlayer.getPlayerY();
+            int playerX = myPlayer.getPlayerX();
+            int playerVelocity =  myPlayer.getVelocity();
 
-            if ((e.getCode() == KeyCode.W || e.getCode() == KeyCode.UP) && (myPlayer.playerPos.y - myPlayer.getVelocity()) >= 0) {
+            if ((e.getCode() == KeyCode.W || e.getCode() == KeyCode.UP) && (playerY - playerVelocity) >= 0) {
 
-                if (!collision(myLShape, "UP")) {
-                    myPlayer.playerPos.y -= myPlayer.getVelocity();
+                if (!collision("UP")) {
+                    myPlayer.setPlayerY(playerY - playerVelocity);
+
                 }
             }
-            if ((e.getCode() == KeyCode.S || e.getCode() == KeyCode.DOWN) && (myPlayer.playerPos.y + myPlayer.getVelocity()) <= GAME_SIZE.height) {
+            if ((e.getCode() == KeyCode.S || e.getCode() == KeyCode.DOWN) && (playerY + playerVelocity) <= GAME_SIZE.height) {
 
-                if (!collision(myLShape, "DOWN")) {
-                    myPlayer.playerPos.y += myPlayer.getVelocity();
+                if (!collision("DOWN")) {
+                    myPlayer.setPlayerY(playerY + playerVelocity);
                 }
             }
-            if ((e.getCode() == KeyCode.A || e.getCode() == KeyCode.LEFT) && (myPlayer.playerPos.x - myPlayer.getVelocity()) >= 0) {
+            if ((e.getCode() == KeyCode.A || e.getCode() == KeyCode.LEFT) && (playerX - playerVelocity) >= 0) {
                 // obstacle collision
 
-                if (!collision(myLShape, "LEFT")) {
-                    myPlayer.playerPos.x  -= myPlayer.getVelocity();
+                if (!collision("LEFT")) {
+                    myPlayer.setPlayerX(playerX - playerVelocity);
                 }
             }
-            if ((e.getCode() == KeyCode.D || e.getCode() == KeyCode.RIGHT) && (myPlayer.playerPos.x + myPlayer.getVelocity()) <= GAME_SIZE.width) {
+            if ((e.getCode() == KeyCode.D || e.getCode() == KeyCode.RIGHT) && (playerX + playerVelocity) <= GAME_SIZE.width) {
 
-                if (!collision(myLShape, "RIGHT")) {
-                    myPlayer.playerPos.x  += myPlayer.getVelocity();
+                if (!collision("RIGHT")) {
+                    myPlayer.setPlayerX(playerX + playerVelocity);
                 }
 
             }
-
 
         });
 
     }
 
-    private boolean collision(ShapeSuper shape, String direction) {
+    private boolean collision(String direction) {
         boolean collide = false;
-        final boolean PERMISSION_LEFT = false;
+        final boolean PERMISSION_LEFT = true;
         final boolean PERMISSION_RIGHT = true;
-        final boolean PERMISSION_UP = false;
+        final boolean PERMISSION_UP = true;
         final boolean PERMISSION_DOWN = true;
         Point updatedPos;
 
         if (direction.equalsIgnoreCase("UP")) {
 
-            updatedPos = new Point(myPlayer.playerPos.x, myPlayer.playerPos.y - myPlayer.getVelocity());
+            updatedPos = new Point(myPlayer.getPlayerX(), myPlayer.getPlayerY() - myPlayer.getVelocity());
             if (updateCurrentRoom(updatedPos, PERMISSION_UP) && PERMISSION_UP) {
                 collide = false;
             } else if (updateCurrentRoom(updatedPos, PERMISSION_UP) && !PERMISSION_UP) {
@@ -131,7 +124,7 @@ public class TriviaWorld1 extends Application {
 
         } else if (direction.equalsIgnoreCase("DOWN")) {
 
-            updatedPos = new Point(myPlayer.playerPos.x, myPlayer.playerPos.y + myPlayer.getVelocity());
+            updatedPos = new Point(myPlayer.getPlayerX(), myPlayer.getPlayerY() + myPlayer.getVelocity());
             if (updateCurrentRoom(updatedPos, PERMISSION_DOWN) && PERMISSION_DOWN) {
                 collide = false;
             } else if (updateCurrentRoom(updatedPos, PERMISSION_DOWN) && !PERMISSION_DOWN) {
@@ -141,7 +134,7 @@ public class TriviaWorld1 extends Application {
 
         } else if (direction.equalsIgnoreCase("LEFT")) {
 
-            updatedPos = new Point(myPlayer.playerPos.x - myPlayer.getVelocity(), myPlayer.playerPos.y);
+            updatedPos = new Point(myPlayer.getPlayerX() - myPlayer.getVelocity(), myPlayer.getPlayerY());
             if (updateCurrentRoom(updatedPos, PERMISSION_LEFT) && PERMISSION_LEFT) {
                 collide = false;
             } else if (updateCurrentRoom(updatedPos, PERMISSION_LEFT) && !PERMISSION_LEFT) {
@@ -150,7 +143,7 @@ public class TriviaWorld1 extends Application {
 
         } else if (direction.equalsIgnoreCase("RIGHT")) {
 
-            updatedPos = new Point(myPlayer.playerPos.x + myPlayer.getVelocity(), myPlayer.playerPos.y);
+            updatedPos = new Point(myPlayer.getPlayerX() + myPlayer.getVelocity(), myPlayer.getPlayerY());
             if (updateCurrentRoom(updatedPos, PERMISSION_RIGHT) && PERMISSION_RIGHT) {
                 collide = false;
             } else if (updateCurrentRoom(updatedPos, PERMISSION_RIGHT) && !PERMISSION_RIGHT) {
@@ -180,11 +173,14 @@ public class TriviaWorld1 extends Application {
 
         if(inGame &&!endReach) {
 
-            if (myPlayer.playerPos.x >= GAME_SIZE.width - PLAYER_SIDE) {
-                myPlayer.playerPos.x = GAME_SIZE.width - PLAYER_SIDE;
+            int playerX = myPlayer.getPlayerX();;
+            int playerY = myPlayer.getPlayerY();
+
+            if (playerX >= GAME_SIZE.width - myPlayer.PLAYER_SIZE.width) {
+                myPlayer.setPlayerX(GAME_SIZE.width - myPlayer.PLAYER_SIZE.width);
             }
-            if (myPlayer.playerPos.y >= GAME_SIZE.height - PLAYER_SIDE) {
-                myPlayer.playerPos.y = GAME_SIZE.height - PLAYER_SIDE;
+            if (playerY >= GAME_SIZE.height - myPlayer.PLAYER_SIZE.height) {
+                myPlayer.setPlayerY(GAME_SIZE.height - myPlayer.PLAYER_SIZE.height);
             }
 
             myPlayer.drawPlayer();
@@ -193,11 +189,14 @@ public class TriviaWorld1 extends Application {
 //            drawObstacle(gc, "ROOM");
             drawRooms();
 
+//            System.out.println("Current player position: " + myPlayer.getPos());
+
             // test for end state
-            if (myPlayer.playerPos.x == GAME_SIZE.width - PLAYER_SIDE && myPlayer.playerPos.y == GAME_SIZE.height - PLAYER_SIDE) {
+            if (myEndRoom.containsPlayer(myPlayer.getPos())) {
                 inGame = false;
                 drawEndingScreen(gc, true);
                 System.out.println("Ending screen was drawn");
+//                Platform.exit();
             }
 
 
@@ -222,12 +221,12 @@ public class TriviaWorld1 extends Application {
         boolean update = false;
 
         for (Room r : myRooms) {
-            if (r.containsPlayer(theUpdatedPos) && r != currentRoom) {
-                System.out.println("Player is trying to move from " + currentRoom.roomID + " to " + r.roomID);
+            if (r.containsPlayer(theUpdatedPos) && r != myCurrentRoom) {
+                System.out.println("Player is trying to move from " + myCurrentRoom.roomID + " to " + r.roomID);
                 update = true;
                 if (permission) {
                     System.out.println("You shall pass!");
-                    currentRoom = r;
+                    myCurrentRoom = r;
                 } else {
                     System.out.println("You shall not pass!");
                 }
@@ -279,7 +278,7 @@ public class TriviaWorld1 extends Application {
     }
 
     /**
-     * Draw some bassic-shape obstacles.
+     * Draw some basic-shape obstacles.
      * @param theShapeName string
      * @param gc
      */
@@ -292,8 +291,7 @@ public class TriviaWorld1 extends Application {
 
         }
         if (theShapeName.equals("J")) {
-            gc.fillRect(150, 0, ROOM_BORDER, 150);
-            gc.fillRect(0, 150, 150 + ROOM_BORDER, ROOM_BORDER);
+
         }
         if (theShapeName.equals("U")) {
 
@@ -314,7 +312,9 @@ public class TriviaWorld1 extends Application {
             }
         }
 
-        currentRoom = myRooms[0];
+        myStartRoom = myRooms[0];
+        myCurrentRoom = myStartRoom;
+        myEndRoom = myRooms[myRooms.length-1];
 
     }
 

@@ -11,11 +11,11 @@ public class Room extends ShapeSuper {
     public int roomID;
     boolean isLocked;
     boolean isActive;
-    Door d1, d2, d3;
+    Door[] myDoors = new Door[4];
+    Door southDoor, northDoor, eastDoor, westDoor;
+
     Question q;
-//    private int myRoomWidth = 150;
-//    private int myRoomHeight = 150;
-    private Dimension ROOM_SIZE = new Dimension(150, 150);
+    public final Dimension ROOM_SIZE = new Dimension(150, 150);
     private Point roomLocation = new Point(0, 0);
 
 
@@ -26,6 +26,18 @@ public class Room extends ShapeSuper {
         roomLocation.y = theStartY;
         myGraphicContext = gc;
 
+        // instantiating all 4 doors
+        southDoor = new Door(this, "SOUTH");
+        northDoor = new Door(this, "NORTH");
+        eastDoor = new Door(this, "EAST");
+        westDoor = new Door(this, "WEST");
+
+        myDoors[0] = southDoor;
+        myDoors[1] = northDoor;
+        myDoors[2] = eastDoor;
+        myDoors[3] = westDoor;
+
+
     }
 
     public void draw() {
@@ -34,6 +46,14 @@ public class Room extends ShapeSuper {
         myGraphicContext.strokeRect(roomLocation.x, roomLocation.y, ROOM_SIZE.width,ROOM_SIZE.height);
 //        myGraphicContext.strokeRect(startX, startY, myRoomWidth, myRoomHeight);
 
+        drawAllDoors();
+    }
+
+    private void drawAllDoors() {
+        southDoor.draw();
+        northDoor.draw();
+        eastDoor.draw();
+        westDoor.draw();
     }
 
     public Point getRoomLocation() {
@@ -83,4 +103,7 @@ public class Room extends ShapeSuper {
         return contains;
     }
 
+    public Door[] getMyDoors() {
+        return myDoors;
+    }
 }

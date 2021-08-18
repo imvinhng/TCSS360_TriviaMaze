@@ -1,5 +1,6 @@
 package com.example.tcss360_triviamaze.programs;
 
+import com.example.tcss360_triviamaze.structures.Door;
 import com.example.tcss360_triviamaze.structures.LShape;
 import com.example.tcss360_triviamaze.structures.Player;
 import com.example.tcss360_triviamaze.structures.Room;
@@ -9,6 +10,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -30,6 +32,7 @@ public class TriviaWorld1 extends Application {
     private LShape myLShape;
     private Player myPlayer;
     private Room myCurrentRoom, myStartRoom, myEndRoom;
+    private Alert myAlert = new Alert(Alert.AlertType.NONE);
 
 
     public void start(Stage stage) throws Exception {
@@ -77,7 +80,9 @@ public class TriviaWorld1 extends Application {
                 if (!collision("UP")) {
                     myPlayer.setPlayerY(playerY - playerVelocity);
 
+
                 }
+
             }
             if ((e.getCode() == KeyCode.S || e.getCode() == KeyCode.DOWN) && (playerY + playerVelocity) <= GAME_SIZE.height) {
 
@@ -106,52 +111,138 @@ public class TriviaWorld1 extends Application {
 
     private boolean collision(String direction) {
         boolean collide = false;
-        final boolean PERMISSION_LEFT = true;
-        final boolean PERMISSION_RIGHT = true;
-        final boolean PERMISSION_UP = true;
-        final boolean PERMISSION_DOWN = true;
+        boolean currPath = false;
+        boolean nextPath = false;
+        final boolean PATH_PERMISSION_WEST = false;
+        final boolean PATH_PERMISSION_EAST = false;
+        final boolean PATH_PERMISSION_NORTH = false;
+        final boolean PATH_PERMISSION_SOUTH = false;
         Point updatedPos;
+
+        // this prohibits the player from going through walls
+        currPath = collideWithDoors(myPlayer.getPos());
+
 
         if (direction.equalsIgnoreCase("UP")) {
 
             updatedPos = new Point(myPlayer.getPlayerX(), myPlayer.getPlayerY() - myPlayer.getVelocity());
-            if (updateCurrentRoom(updatedPos, PERMISSION_UP) && PERMISSION_UP) {
+
+            nextPath = collideWithDoors(updatedPos);
+            if (nextPath) {
+                System.out.println("Player is moving to next to a door path");
+            }
+
+
+            if (!updateCurrentRoom(updatedPos, PATH_PERMISSION_NORTH)) {
                 collide = false;
-            } else if (updateCurrentRoom(updatedPos, PERMISSION_UP) && !PERMISSION_UP) {
+//                System.out.println("Player is moving within the room");
+            } else if (updateCurrentRoom(updatedPos, PATH_PERMISSION_NORTH) && currPath && PATH_PERMISSION_NORTH) {
+                collide = false;
+                System.out.println("Player is crossing a door into the next room");
+            } else if (updateCurrentRoom(updatedPos, PATH_PERMISSION_NORTH) && (!PATH_PERMISSION_NORTH || !currPath)) {
                 collide = true;
+
+                myAlert.setAlertType(Alert.AlertType.ERROR);
+                myAlert.setContentText("Player is attempting to cross a locked door. Permission denied!");
+                myAlert.show();
+
+                System.out.println("Player is attempting to cross a locked door. Permission denied!");
             }
 
 
         } else if (direction.equalsIgnoreCase("DOWN")) {
 
             updatedPos = new Point(myPlayer.getPlayerX(), myPlayer.getPlayerY() + myPlayer.getVelocity());
-            if (updateCurrentRoom(updatedPos, PERMISSION_DOWN) && PERMISSION_DOWN) {
+
+            nextPath = collideWithDoors(updatedPos);
+            if (nextPath) {
+                System.out.println("Player is moving to next to a door path");
+            }
+
+            if (!updateCurrentRoom(updatedPos, PATH_PERMISSION_SOUTH)) {
                 collide = false;
-            } else if (updateCurrentRoom(updatedPos, PERMISSION_DOWN) && !PERMISSION_DOWN) {
+//                System.out.println("Player is moving within the room");
+            } else if (updateCurrentRoom(updatedPos, PATH_PERMISSION_SOUTH) && nextPath && PATH_PERMISSION_SOUTH) {
+                collide = false;
+                System.out.println("Player is crossing a door into the next room");
+            } else if (updateCurrentRoom(updatedPos, PATH_PERMISSION_SOUTH) && (!PATH_PERMISSION_SOUTH || !nextPath)) {
                 collide = true;
+
+                myAlert.setAlertType(Alert.AlertType.ERROR);
+                myAlert.setContentText("Player is attempting to cross a locked door. Permission denied!");
+                myAlert.show();
+
+                System.out.println("Player is attempting to cross a locked door. Permission denied!");
             }
 
 
         } else if (direction.equalsIgnoreCase("LEFT")) {
 
             updatedPos = new Point(myPlayer.getPlayerX() - myPlayer.getVelocity(), myPlayer.getPlayerY());
-            if (updateCurrentRoom(updatedPos, PERMISSION_LEFT) && PERMISSION_LEFT) {
+
+            nextPath = collideWithDoors(updatedPos);
+            if (nextPath) {
+                System.out.println("Player is moving to next to a door path");
+            }
+
+
+            if (!updateCurrentRoom(updatedPos, PATH_PERMISSION_WEST)) {
                 collide = false;
-            } else if (updateCurrentRoom(updatedPos, PERMISSION_LEFT) && !PERMISSION_LEFT) {
+//                System.out.println("Player is moving within the room");
+            } else if (updateCurrentRoom(updatedPos, PATH_PERMISSION_WEST) && nextPath && PATH_PERMISSION_WEST) {
+                collide = false;
+                System.out.println("Player is crossing a door into the next room");
+            } else if (updateCurrentRoom(updatedPos, PATH_PERMISSION_WEST) && (!PATH_PERMISSION_WEST || !nextPath)) {
                 collide = true;
+
+                myAlert.setAlertType(Alert.AlertType.ERROR);
+                myAlert.setContentText("Player is attempting to cross a locked door. Permission denied!");
+                myAlert.show();
+
+                System.out.println("Player is attempting to cross a locked door. Permission denied!");
             }
 
         } else if (direction.equalsIgnoreCase("RIGHT")) {
 
             updatedPos = new Point(myPlayer.getPlayerX() + myPlayer.getVelocity(), myPlayer.getPlayerY());
-            if (updateCurrentRoom(updatedPos, PERMISSION_RIGHT) && PERMISSION_RIGHT) {
+
+            nextPath = collideWithDoors(updatedPos);
+            if (nextPath) {
+                System.out.println("Player is moving to next to a door path");
+            }
+
+
+
+            if (!updateCurrentRoom(updatedPos, PATH_PERMISSION_EAST)) {
                 collide = false;
-            } else if (updateCurrentRoom(updatedPos, PERMISSION_RIGHT) && !PERMISSION_RIGHT) {
+//                System.out.println("Player is moving within the room");
+            } else if (updateCurrentRoom(updatedPos, PATH_PERMISSION_EAST) && nextPath && PATH_PERMISSION_EAST) {
+                collide = false;
+                System.out.println("Player is crossing a door into the next room");
+            } else if (updateCurrentRoom(updatedPos, PATH_PERMISSION_EAST) && (!PATH_PERMISSION_EAST || !nextPath)) {
                 collide = true;
+
+                myAlert.setAlertType(Alert.AlertType.ERROR);
+                myAlert.setContentText("Player is attempting to cross a locked door. Permission denied!");
+                myAlert.show();
+                System.out.println("Player is attempting to cross a locked door. Permission denied!");
             }
 
         } else {
             collide = false;
+        }
+
+        return collide;
+    }
+
+    private boolean collideWithDoors(Point updatedPos) {
+        boolean collide = false;
+
+        for (Door door : myCurrentRoom.getMyDoors()) {
+            if (door.collideWith(updatedPos)) {
+                collide = true;
+//                System.out.println("Player is currently colliding with the " + door.getMyDirection() + " door");
+            }
         }
 
         return collide;

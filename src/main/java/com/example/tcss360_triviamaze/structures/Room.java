@@ -106,4 +106,20 @@ public class Room extends ShapeSuper {
     public Door[] getMyDoors() {
         return myDoors;
     }
+
+    public Door getSouthDoor() {
+        return southDoor;
+    }
+
+    public Door getNorthDoor() {
+        return northDoor;
+    }
+
+    public Door getEastDoor() {
+        return eastDoor;
+    }
+
+    public Door getWestDoor() {
+        return westDoor;
+    }
 }

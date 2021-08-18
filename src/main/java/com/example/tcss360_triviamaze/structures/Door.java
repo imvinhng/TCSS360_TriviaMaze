@@ -12,6 +12,7 @@ public class Door {
     private final Dimension DOOR_SIZE_VERTICAL = new Dimension(5, 50);
     private final Dimension DOOR_SIZE_HORIZONTAL = new Dimension(50, 5);
     private Point doorLocation;
+    private boolean myPathPermission = false;
     String myDirection;
 
     public Door(Room theRoom, String direction) {
@@ -57,20 +58,27 @@ public class Door {
     public boolean collideWith(Player thePlayer) {
         boolean collide = false;
 
-        // collide with west
+        // collide with west or north
         if (myDirection.equalsIgnoreCase("WEST") || myDirection.equalsIgnoreCase("NORTH") ) {
             if (thePlayer.getPlayerX() == doorLocation.x & thePlayer.getPlayerY() == doorLocation.y) {
                 collide = true;
             }
         }
 
-        // collide with east
+        // collide with east or south
+        if (myDirection.equalsIgnoreCase("EAST")) {
+            if (thePlayer.getPlayerX() == (doorLocation.x + DOOR_SIZE_VERTICAL.width - new Player().PLAYER_SIZE.width) &&
+                    thePlayer.getPlayerY() == doorLocation.y) {
+                collide = true;
+            }
+        }
 
-
-        // collide with north
-
-
-        // collide with south
+        if (myDirection.equalsIgnoreCase("SOUTH")) {
+            if (thePlayer.getPlayerX() == doorLocation.x &&
+                    thePlayer.getPlayerY() == (doorLocation.y + DOOR_SIZE_HORIZONTAL.height - new Player().PLAYER_SIZE.height)) {
+                collide = true;
+            }
+        }
 
         return collide;
     }
@@ -109,6 +117,14 @@ public class Door {
 
     public String getMyDirection() {
         return myDirection;
+    }
+
+    public boolean getMyPathPermission() {
+        return myPathPermission;
+    }
+
+    public void unlockDoor() {
+        myPathPermission = true;
     }
 
 

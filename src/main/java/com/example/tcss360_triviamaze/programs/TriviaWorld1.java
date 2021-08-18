@@ -113,10 +113,10 @@ public class TriviaWorld1 extends Application {
         boolean collide = false;
         boolean currPath = false;
         boolean nextPath = false;
-        final boolean PATH_PERMISSION_WEST = false;
-        final boolean PATH_PERMISSION_EAST = false;
-        final boolean PATH_PERMISSION_NORTH = false;
-        final boolean PATH_PERMISSION_SOUTH = false;
+        final boolean PATH_PERMISSION_WEST = true;
+        final boolean PATH_PERMISSION_EAST = true;
+        final boolean PATH_PERMISSION_NORTH = true;
+        final boolean PATH_PERMISSION_SOUTH = true;
         Point updatedPos;
 
         // this prohibits the player from going through walls
@@ -128,12 +128,12 @@ public class TriviaWorld1 extends Application {
             updatedPos = new Point(myPlayer.getPlayerX(), myPlayer.getPlayerY() - myPlayer.getVelocity());
 
             nextPath = collideWithDoors(updatedPos);
-            if (nextPath) {
-                System.out.println("Player is moving to next to a door path");
-            }
 
 
-            if (!updateCurrentRoom(updatedPos, PATH_PERMISSION_NORTH)) {
+            if (!currPath && !nextPath) {
+                collide = true;
+                System.out.println("Player cannot pass through the wall");
+            } else if (!updateCurrentRoom(updatedPos, PATH_PERMISSION_NORTH)) {
                 collide = false;
 //                System.out.println("Player is moving within the room");
             } else if (updateCurrentRoom(updatedPos, PATH_PERMISSION_NORTH) && currPath && PATH_PERMISSION_NORTH) {
@@ -155,11 +155,10 @@ public class TriviaWorld1 extends Application {
             updatedPos = new Point(myPlayer.getPlayerX(), myPlayer.getPlayerY() + myPlayer.getVelocity());
 
             nextPath = collideWithDoors(updatedPos);
-            if (nextPath) {
-                System.out.println("Player is moving to next to a door path");
-            }
-
-            if (!updateCurrentRoom(updatedPos, PATH_PERMISSION_SOUTH)) {
+            if (!currPath && !nextPath) {
+                collide = true;
+                System.out.println("Player cannot pass through the wall");
+            } else if (!updateCurrentRoom(updatedPos, PATH_PERMISSION_SOUTH)) {
                 collide = false;
 //                System.out.println("Player is moving within the room");
             } else if (updateCurrentRoom(updatedPos, PATH_PERMISSION_SOUTH) && nextPath && PATH_PERMISSION_SOUTH) {
@@ -181,12 +180,10 @@ public class TriviaWorld1 extends Application {
             updatedPos = new Point(myPlayer.getPlayerX() - myPlayer.getVelocity(), myPlayer.getPlayerY());
 
             nextPath = collideWithDoors(updatedPos);
-            if (nextPath) {
-                System.out.println("Player is moving to next to a door path");
-            }
-
-
-            if (!updateCurrentRoom(updatedPos, PATH_PERMISSION_WEST)) {
+            if (!currPath && !nextPath) {
+                collide = true;
+                System.out.println("Player cannot pass through the wall");
+            } else if (!updateCurrentRoom(updatedPos, PATH_PERMISSION_WEST)) {
                 collide = false;
 //                System.out.println("Player is moving within the room");
             } else if (updateCurrentRoom(updatedPos, PATH_PERMISSION_WEST) && nextPath && PATH_PERMISSION_WEST) {
@@ -207,13 +204,11 @@ public class TriviaWorld1 extends Application {
             updatedPos = new Point(myPlayer.getPlayerX() + myPlayer.getVelocity(), myPlayer.getPlayerY());
 
             nextPath = collideWithDoors(updatedPos);
-            if (nextPath) {
-                System.out.println("Player is moving to next to a door path");
-            }
-
-
-
-            if (!updateCurrentRoom(updatedPos, PATH_PERMISSION_EAST)) {
+            
+            if (!currPath && !nextPath) {
+                collide = true;
+                System.out.println("Player cannot pass through the wall");
+            } else if (!updateCurrentRoom(updatedPos, PATH_PERMISSION_EAST)) {
                 collide = false;
 //                System.out.println("Player is moving within the room");
             } else if (updateCurrentRoom(updatedPos, PATH_PERMISSION_EAST) && nextPath && PATH_PERMISSION_EAST) {

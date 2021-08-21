@@ -51,12 +51,24 @@ public class TriviaWorld1 extends Application {
         tl.setCycleCount(Timeline.INDEFINITE);
 
         //mouse control (move and click)
-//        canvas.setOnMouseMoved(e -> {
-//            playerOneXPos  = e.getX();
-//            playerOneYPos = e.getY();
-//        });
+        /* canvas.setOnMouseMoved(e -> {
+            playerOneXPos  = e.getX();
+            playerOneYPos = e.getY();
+        });
 
-//        canvas.setOnMouseClicked(e ->  gameStarted = true);
+        canvas.setOnMouseClicked(e ->  gameStarted = true); */
+
+        // setting up the Menus
+
+
+
+        // setting up the Menu Items
+
+
+
+        // setting up the Menu Bar
+
+
 
 
         Scene basicScene = new Scene(new StackPane(canvas));
@@ -113,10 +125,10 @@ public class TriviaWorld1 extends Application {
         boolean collide = false;
         boolean currPath = false;
         boolean nextPath = false;
-        final boolean PATH_PERMISSION_WEST = true;
-        final boolean PATH_PERMISSION_EAST = true;
-        final boolean PATH_PERMISSION_NORTH = true;
-        final boolean PATH_PERMISSION_SOUTH = true;
+        boolean PATH_PERMISSION_WEST = myCurrentRoom.getWestDoor().getMyPathPermission();
+        boolean PATH_PERMISSION_EAST = myCurrentRoom.getEastDoor().getMyPathPermission();
+        boolean PATH_PERMISSION_NORTH = myCurrentRoom.getNorthDoor().getMyPathPermission();
+        boolean PATH_PERMISSION_SOUTH = myCurrentRoom.getSouthDoor().getMyPathPermission();
         Point updatedPos;
 
         // this prohibits the player from going through walls

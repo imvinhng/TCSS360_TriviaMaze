@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #e1eff0;" stylesheets="@css/application.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tcss360_triviamaze.control.SceneController">
+   <children>
+      <MenuBar layoutY="-1.0" prefHeight="25.0" prefWidth="600.0" stylesheets="@css/application.css">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" text="Save" />
+                  <MenuItem mnemonicParsing="false" text="Save As..." />
+                  <MenuItem mnemonicParsing="false" text="Open..." />
+              <MenuItem mnemonicParsing="false" text="Exit" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Sound">
+            <items>
+                  <CheckMenuItem mnemonicParsing="false" text="Mute" />
+                  <CheckMenuItem mnemonicParsing="false" text="Background Music" />
+                  <CheckMenuItem mnemonicParsing="false" text="SFX" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Window">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Full Screen" />
+              </items>
+            </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+                  <MenuItem mnemonicParsing="false" text="Contact Us!" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <Button layoutX="266.0" layoutY="236.0" mnemonicParsing="false" onAction="#switchToLevel1" text="Start" />
+      <Button layoutX="250.0" layoutY="275.0" mnemonicParsing="false" onAction="#switchToTutorial1" text="Instruction" />
+      <Label layoutX="159.0" layoutY="111.0" text="TriviaWorldUltimate" textFill="#e13636">
+         <font>
+            <Font name="Baskerville Old Face" size="30.0" />
+         </font>
+      </Label>
+      <Button layoutX="14.0" layoutY="38.0" mnemonicParsing="false" onAction="#switchToStartScene" text="Home" />
+   </children>
+</AnchorPane>

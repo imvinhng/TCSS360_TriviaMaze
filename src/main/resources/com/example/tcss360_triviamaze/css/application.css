@@ -1,0 +1,19 @@
+.root {
+    -fx-background-color: "black";
+}
+
+
+.menu-bar {
+    -fx-font-size: 15;
+    -fx-font-family: "Baskerville Old Face";
+    -fx-text-fill: #FFFFFF;
+    -fx-alignment: left;
+}
+
+#myTitleLabel {
+    -fx-font-size: 20;
+    -fx-font-family: "Baskerville Old Face";
+    -fx-text-fill: #000000;
+    -fx-background-color: #FFFFFF;
+    -fx-alignment: center;
+}
